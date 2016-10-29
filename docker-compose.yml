@@ -1,0 +1,29 @@
+#LOCAL DOCKER REGISTRY
+version: '2'
+
+services:
+   registry:
+          image: registry:2
+          volumes:
+            - ./data/:/docker-registry
+          ports:
+            - "127.0.0.1:5000:5000"
+          restart: "always"
+          environment:
+             REGISTRY_STORAGE_FILESYSTEM_ROOTDIRECTORY: /docker-registry
+             REGISTRY_STORAGE_DELETE_ENABLED: 'True'
+          networks:
+             - registry
+   nginx:
+          image: nginx:latest
+          volumes:
+           - ./nginx/:/etc/nginx/conf.d:ro
+          ports:
+           - "80:80"
+          restart: "always"
+          networks:
+             - registry
+
+networks:
+   registry:
+
